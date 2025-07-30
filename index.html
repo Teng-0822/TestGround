@@ -1,45 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Run AutoTouch Script</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>AutoTouch Script Launcher</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 60px; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      background-color: #f0f0f0;
+    }
     button {
-      padding: 16px 24px;
+      padding: 15px 30px;
       font-size: 18px;
-      border-radius: 10px;
-      background-color: #28a745;
+      background-color: #007aff;
       color: white;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #218838;
+      background-color: #005ecb;
     }
   </style>
 </head>
 <body>
+  <h1>Connect to AutoTouch</h1>
+  <p>Click the button to connect and run your script on 192.168.1.10</p>
+  <button onclick="connectAndRun()">Connect & Run Script</button>
 
-<h2>Run AutoTouch Script</h2>
-<button onclick="runAutoTouch()">▶ Run trial.lua</button>
-
-<script>
-function runAutoTouch() {
-  fetch("http://127.0.0.1:8080/control/start_playing?path=/private/preboot/8426B461DDE26DB4E4D81A3CF248DA57F2EF34FB8990D97DB2A0B015DDA4E4DE61D3B9AD611DBAA458E80CD5D4818AFD/jb-e5Tmc0FO/procursus/var/mobile/Library/AutoTouch/Scripts/trial.lua")
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "success") {
-        alert("✅ Script started!");
-      } else {
-        alert("❌ Failed: " + data.info);
-      }
-    })
-    .catch(err => {
-      alert("🚫 Error: " + err.message);
-    });
-}
-</script>
-
+  <script>
+    function connectAndRun() {
+      // Redirect to AutoTouch web server
+      window.location.href = "http://192.168.1.10:8080/run?script=trial.lua";
+    }
+  </script>
 </body>
 </html>
