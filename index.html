@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AutoTouch Connection Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 60px; }
+    #statusBox {
+      width: 200px;
+      height: 100px;
+      line-height: 100px;
+      font-size: 20px;
+      margin: 20px auto;
+      border-radius: 12px;
+      color: white;
+    }
+    .connected {
+      background-color: #28a745;
+    }
+    .disconnected {
+      background-color: #dc3545;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+    }
+    button:hover {
+      background-color: #0069d9;
+    }
+  </style>
+</head>
+<body>
+
+<h2>AutoTouch Server Connection Status</h2>
+<div id="statusBox" class="disconnected">Checking...</div>
+
+<button onclick="checkConnection()">🔄 Recheck</button>
+
+<script>
+function checkConnection() {
+  const box = document.getElementById('statusBox');
+  box.className = '';
+  box.textContent = 'Checking...';
+
+  fetch("http://192.168.1.10:8080/info")
+    .then(res => {
+      if (!res.ok) throw new Error("HTTP error");
+      return res.json();
+    })
+    .then(data => {
+      box.textContent = "Connected";
+      box.className = 'connected';
+    })
+    .catch(err => {
+      box.textContent = "Disconnected";
+      box.className = 'disconnected';
+    });
+}
+
+checkConnection(); // run on load
+</script>
+
+</body>
+</html>
