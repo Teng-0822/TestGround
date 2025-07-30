@@ -1,69 +1,44 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AutoTouch Connection Test</title>
+  <title>Run AutoTouch Script</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 60px; }
-    #statusBox {
-      width: 200px;
-      height: 100px;
-      line-height: 100px;
-      font-size: 20px;
-      margin: 20px auto;
-      border-radius: 12px;
-      color: white;
-    }
-    .connected {
-      background-color: #28a745;
-    }
-    .disconnected {
-      background-color: #dc3545;
-    }
     button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 20px;
-      border-radius: 8px;
-      border: none;
-      background-color: #007bff;
+      padding: 16px 24px;
+      font-size: 18px;
+      border-radius: 10px;
+      background-color: #28a745;
       color: white;
+      border: none;
+      cursor: pointer;
     }
     button:hover {
-      background-color: #0069d9;
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
 
-<h2>AutoTouch Server Connection Status</h2>
-<div id="statusBox" class="disconnected">Checking...</div>
-
-<button onclick="checkConnection()">🔄 Recheck</button>
+<h2>Run AutoTouch Script</h2>
+<button onclick="runAutoTouch()">▶ Run trial.lua</button>
 
 <script>
-function checkConnection() {
-  const box = document.getElementById('statusBox');
-  box.className = '';
-  box.textContent = 'Checking...';
-
-  fetch("http://192.168.1.10:8080/info")
-    .then(res => {
-      if (!res.ok) throw new Error("HTTP error");
-      return res.json();
-    })
+function runAutoTouch() {
+  fetch("http://127.0.0.1:8080/control/start_playing?path=/var/mobile/Library/AutoTouch/Scripts/trial.lua")
+    .then(res => res.json())
     .then(data => {
-      box.textContent = "Connected";
-      box.className = 'connected';
+      if (data.status === "success") {
+        alert("✅ Script started!");
+      } else {
+        alert("❌ Failed: " + data.info);
+      }
     })
     .catch(err => {
-      box.textContent = "Disconnected";
-      box.className = 'disconnected';
+      alert("🚫 Error: " + err.message);
     });
 }
-
-checkConnection(); // run on load
 </script>
 
 </body>
