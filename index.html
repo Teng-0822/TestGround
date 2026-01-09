@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Assistant Scheduler - Login</title>
+    <style>
+        :root {
+            --primary: #c74ad5;
+            --primary-light: #e88bf5;
+            --primary-dark: #a93bb8;
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        /* ===== AUTH CONTAINER ===== */
+        .auth-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(199, 74, 213, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: var(--danger);
+        }
+
+        .form-group input.success {
+            border-color: var(--success);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .input-hint.error {
+            color: var(--danger);
+        }
+
+        .input-hint.success {
+            color: var(--success);
+        }
+
+        /* ===== AUTH SCREENS ===== */
+        .auth-screen {
+            display: none;
+        }
+
+        .auth-screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-option {
+            padding: 20px;
+            border: 3px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            background: var(--bg-secondary);
+        }
+
+        .auth-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-option-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .auth-option-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .auth-option-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ===== STEPS INDICATOR ===== */
+        .steps-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed {
+            background: var(--success);
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        /* ===== THEME SELECTOR ===== */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .theme-option {
+            padding: 30px 20px;
+            border: 3px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            position: relative;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .theme-option.selected {
+            border-color: #333;
+            transform: scale(1.05);
+        }
+
+        .theme-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f2937;
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.3s ease;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== PASSWORD TOGGLE ===== */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-secondary);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                left: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- ===== SCREEN 1: Welcome/Choice ===== -->
+        <div id="screenWelcome" class="auth-screen active">
+            <div class="auth-header">
+                <div class="auth-icon">📅</div>
+                <h1 class="auth-title">VA Scheduler</h1>
+                <p class="auth-subtitle">Manage clients and tasks reminder</p>
+            </div>
+            <div class="auth-options">
+                <div class="auth-option" onclick="showScreen('screenLogin')">
+                    <div class="auth-option-icon">🔓</div>
+                    <div class="auth-option-title">Login</div>
+                    <div class="auth-option-desc">I already have an account</div>
+                </div>
+                <div class="auth-option" onclick="showScreen('screenRegisterCode')">
+                    <div class="auth-option-icon">📝</div>
+                    <div class="auth-option-title">Register</div>
+                    <div class="auth-option-desc">I have a registration code</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SCREEN 2: Login ===== -->
+        <div id="screenLogin" class="auth-screen">
+            <span class="back-link" onclick="showScreen('screenWelcome')">← Back</span>
+            <div class="auth-header">
+                <div class="auth-icon">🔓</div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Login to your account</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" id="loginBtn" class="btn btn-primary">
+                    Login
+                </button>
+            </form>
+            <div class="divider"><span>or</span></div>
+            <button class="btn btn-secondary" onclick="showScreen('screenRegisterCode')">Create New Account</button>
+        </div>
+
+        <!-- ===== SCREEN 3: Registration - Code Verification ===== -->
+        <div id="screenRegisterCode" class="auth-screen">
+            <span class="back-link" onclick="showScreen('screenWelcome')">← Back</span>
+            <div class="steps-indicator">
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+            <div class="auth-header">
+                <div class="auth-icon">🎟️</div>
+                <h1 class="auth-title">Registration Code</h1>
+                <p class="auth-subtitle">Enter your unique access code</p>
+            </div>
+            <form id="codeForm" onsubmit="handleCodeVerification(event)">
+                <div class="form-group">
+                    <label for="regCode">Access Code</label>
+                    <input type="text" id="regCode" placeholder="Enter your code" required style="text-transform: uppercase; letter-spacing: 2px; text-align: center; font-size: 1.2rem; font-weight: 600;">
+                    <p class="input-hint">Ask your administrator for a registration code</p>
+                </div>
+                <button type="submit" id="verifyCodeBtn" class="btn btn-primary">
+                    Verify Code
+                </button>
+            </form>
+            <div class="divider"><span>already have an account?</span></div>
+            <button class="btn btn-secondary" onclick="showScreen('screenLogin')">Login Instead</button>
+        </div>
+
+        <!-- ===== SCREEN 4: Registration - Create Account ===== -->
+        <div id="screenRegisterAccount" class="auth-screen">
+            <span class="back-link" onclick="showScreen('screenRegisterCode')">← Back</span>
+            <div class="steps-indicator">
+                <div class="step-dot completed"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+            </div>
+            <div class="auth-header">
+                <div class="auth-icon">👤</div>
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Fill in your details</p>
+            </div>
+            <form id="registerForm" onsubmit="handleRegistration(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="givenName">Given Name</label>
+                        <input type="text" id="givenName" placeholder="Juan" required minlength="2" maxlength="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Dela Cruz" required minlength="2" maxlength="20">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" placeholder="Choose a username" required minlength="3" maxlength="10" oninput="checkUsername()" pattern="[a-zA-Z0-9_]+">
+                    <p id="usernameHint" class="input-hint">Minimum 3 characters, no spaces</p>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassword" placeholder="Create a password" required minlength="6" maxlength="25" oninput="checkPassword()" pattern="[^\s]+" title="No spaces allowed">
+                        <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">👁️</button>
+                    </div>
+                    <p id="passwordHint" class="input-hint">Minimum 6 characters, no spaces</p>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required oninput="checkPasswordMatch()">
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)">👁️</button>
+                    </div>
+                    <p id="passwordMatchHint" class="input-hint"></p>
+                </div>
+                <button type="submit" id="registerBtn" class="btn btn-success">
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <!-- ===== SCREEN 5: Theme Selection ===== -->
+        <div id="screenTheme" class="auth-screen">
+            <div class="steps-indicator">
+                <div class="step-dot completed"></div>
+                <div class="step-dot completed"></div>
+                <div class="step-dot active"></div>
+            </div>
+            <div class="auth-header">
+                <div class="auth-icon">🎨</div>
+                <h1 class="auth-title">Choose Your Theme</h1>
+                <p class="auth-subtitle">Select a color theme for your dashboard</p>
+            </div>
+            <div class="theme-grid" id="themeGrid"></div>
+            <button id="saveThemeBtn" class="btn btn-primary" onclick="handleThemeSelection()" disabled>
+                Continue to Dashboard
+            </button>
+        </div>
+
+        <!-- ===== SCREEN 6: Loading/Redirect ===== -->
+        <div id="screenLoading" class="auth-screen">
+            <div class="auth-header" style="padding: 60px 0;">
+                <div class="auth-icon">⏳</div>
+                <h1 class="auth-title">Loading...</h1>
+                <p class="auth-subtitle" id="loadingMessage">Preparing your dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // =============================================================================
+        // VA SCHEDULER - LOGIN/REGISTER SYSTEM
+        // =============================================================================
+
+        // ===== CONFIGURATION =====
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwaI-zUCmBq8wWtG0f9MvfGNJfzh_-7wKzbSWl8kbSdMguMxiBPAaUzWlBPCDB5XUAO/exec';
+        
+        // ===== GLOBAL STATE =====
+        let verifiedCode = null;
+        let selectedTheme = null;
+        let currentUser = null;
+        let usernameCheckTimeout = null;
+
+        // ===== THEME DEFINITIONS (Matching dashboard themes) =====
+        const themes = {
+            Default: { 
+                name: 'Default', 
+                color: 'linear-gradient(135deg, #a855f7, #ec4899)'
+            },
+            Dark: { 
+                name: 'Dark', 
+                color: 'linear-gradient(135deg, #1f2937, #374151)'
+            },
+            Ocean: { 
+                name: 'Ocean', 
+                color: 'linear-gradient(135deg, #0ea5e9, #06b6d4)'
+            },
+            Forest: { 
+                name: 'Forest', 
+                color: 'linear-gradient(135deg, #059669, #10b981)'
+            },
+            Sunset: { 
+                name: 'Sunset', 
+                color: 'linear-gradient(135deg, #f59e0b, #ef4444)'
+            }
+        };
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const storedUser = localStorage.getItem('vaSchedulerUser');
+            if (storedUser) {
+                try {
+                    currentUser = JSON.parse(storedUser);
+                    redirectToDashboard();
+                } catch (e) {
+                    localStorage.removeItem('vaSchedulerUser');
+                }
+            }
+
+            // Render theme options
+            renderThemeOptions();
+        });
+
+        // ===== SCREEN NAVIGATION =====
+        function showScreen(screenId) {
+            document.querySelectorAll('.auth-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // ===== TOAST NOTIFICATIONS =====
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ===== PASSWORD TOGGLE =====
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('regPassword');
+            let password = passwordInput.value;
+            const hint = document.getElementById('passwordHint');
+            
+            if (password.includes(' ')) {
+                password = password.replace(/\s/g, '');
+                passwordInput.value = password;
+                hint.textContent = '⚠️ Spaces removed automatically';
+                hint.classList.add('error');
+                setTimeout(() => {
+                    hint.classList.remove('error');
+                    hint.textContent = 'Minimum 6 characters, no spaces';
+                }, 2000);
+                return;
+            }
+            
+            hint.classList.remove('error', 'success');
+            
+            if (password.length < 6) {
+                hint.textContent = 'Minimum 6 characters, no spaces';
+            } else {
+                hint.textContent = '✓ Password valid';
+                hint.classList.add('success');
+            }
+        }
+
+        // ===== API CALLS =====
+        async function apiCall(action, data = {}) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action, ...data }),
+                    redirect: 'follow'
+                });
+                const text = await response.text();
+                return JSON.parse(text);
+            } catch (error) {
+                console.error('API Error:', error);
+                return { success: false, message: 'Connection error. Please check your internet.' };
+            }
+        }
+
+        // ===== LOGIN HANDLER =====
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Logging in...';
+            
+            const result = await apiCall('login', { username, password });
+            
+            if (result.success) {
+                showToast('Login successful! 🎉', 'success');
+                
+                currentUser = {
+                    userId: result.userId,
+                    username: result.username,
+                    fullName: result.fullName,
+                    theme: result.theme,
+                    profile: result.profile,
+                    data: result.data
+                };
+                localStorage.setItem('vaSchedulerUser', JSON.stringify(currentUser));
+                
+                if (!result.theme) {
+                    showScreen('screenTheme');
+                } else {
+                    redirectToDashboard();
+                }
+            } else {
+                showToast(result.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Login';
+                
+                if (result.locked) {
+                    document.getElementById('loginUsername').disabled = true;
+                    document.getElementById('loginPassword').disabled = true;
+                    setTimeout(() => {
+                        document.getElementById('loginUsername').disabled = false;
+                        document.getElementById('loginPassword').disabled = false;
+                    }, 60000);
+                }
+            }
+        }
+
+        // ===== CODE VERIFICATION HANDLER =====
+        async function handleCodeVerification(event) {
+            event.preventDefault();
+            
+            const code = document.getElementById('regCode').value.trim().toUpperCase();
+            const btn = document.getElementById('verifyCodeBtn');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Verifying...';
+            
+            const result = await apiCall('verify', { code });
+            
+            if (result.success) {
+                showToast(result.message, 'success');
+                verifiedCode = code;
+                showScreen('screenRegisterAccount');
+            } else {
+                showToast(result.message, 'error');
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Verify Code';
+        }
+
+        // ===== USERNAME CHECK =====
+        function checkUsername() {
+            const usernameInput = document.getElementById('regUsername');
+            let username = usernameInput.value;
+            const hint = document.getElementById('usernameHint');
+            
+            if (username.includes(' ')) {
+                username = username.replace(/\s/g, '');
+                usernameInput.value = username;
+                hint.textContent = '⚠️ Spaces removed automatically';
+                hint.classList.add('error');
+                setTimeout(() => {
+                    hint.classList.remove('error');
+                    hint.textContent = 'Minimum 3 characters, no spaces';
+                }, 2000);
+                return;
+            }
+            
+            username = username.trim();
+            
+            if (usernameCheckTimeout) clearTimeout(usernameCheckTimeout);
+            
+            usernameInput.classList.remove('error', 'success');
+            hint.classList.remove('error', 'success');
+            
+            if (username.length < 3) {
+                hint.textContent = 'Minimum 3 characters, no spaces';
+                return;
+            }
+            
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                usernameInput.classList.add('error');
+                hint.classList.add('error');
+                hint.textContent = '✗ Only letters, numbers, and underscore allowed';
+                return;
+            }
+            
+            hint.textContent = 'Checking availability...';
+            
+            usernameCheckTimeout = setTimeout(async () => {
+                const result = await apiCall('checkUsername', { username });
+                
+                if (result.available) {
+                    usernameInput.classList.add('success');
+                    hint.classList.add('success');
+                    hint.textContent = '✓ Username available';
+                } else {
+                    usernameInput.classList.add('error');
+                    hint.classList.add('error');
+                    hint.textContent = '✗ Username already taken';
+                }
+            }, 500);
+        }
+
+        // ===== PASSWORD MATCH CHECK =====
+        function checkPasswordMatch() {
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const hint = document.getElementById('passwordMatchHint');
+            const input = document.getElementById('confirmPassword');
+            
+            input.classList.remove('error', 'success');
+            hint.classList.remove('error', 'success');
+            
+            if (confirm.length === 0) {
+                hint.textContent = '';
+                return;
+            }
+            
+            if (password === confirm) {
+                input.classList.add('success');
+                hint.classList.add('success');
+                hint.textContent = '✓ Passwords match';
+            } else {
+                input.classList.add('error');
+                hint.classList.add('error');
+                hint.textContent = '✗ Passwords do not match';
+            }
+        }
+
+        // ===== REGISTRATION HANDLER =====
+        async function handleRegistration(event) {
+            event.preventDefault();
+            
+            const givenName = document.getElementById('givenName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('registerBtn');
+            
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (username.length < 3) {
+                showToast('Username must be at least 3 characters', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Creating Account...';
+            
+            const result = await apiCall('register', {
+                code: verifiedCode,
+                givenName,
+                lastName,
+                username,
+                password
+            });
+            
+            if (result.success) {
+                showToast('Account created successfully! 🎉', 'success');
+                
+                currentUser = {
+                    userId: result.userId,
+                    username: result.username,
+                    fullName: result.fullName,
+                    profile: result.profile,
+                    data: result.data
+                };
+                localStorage.setItem('vaSchedulerUser', JSON.stringify(currentUser));
+                
+                showScreen('screenTheme');
+            } else {
+                showToast(result.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+            }
+        }
+
+        // ===== THEME SELECTION =====
+        function renderThemeOptions() {
+            const grid = document.getElementById('themeGrid');
+            grid.innerHTML = Object.entries(themes).map(([key, theme]) => `
+                <div class="theme-option" 
+                     data-theme="${key}" 
+                     style="background: ${theme.color};"
+                     onclick="selectTheme('${key}')">
+                    ${theme.name}
+                </div>
+            `).join('');
+        }
+
+        function selectTheme(themeKey) {
+            selectedTheme = themeKey;
+            
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`[data-theme="${themeKey}"]`).classList.add('selected');
+            
+            document.getElementById('saveThemeBtn').disabled = false;
+        }
+
+        async function handleThemeSelection() {
+            if (!selectedTheme) {
+                showToast('Please select a theme', 'warning');
+                return;
+            }
+            
+            const btn = document.getElementById('saveThemeBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Saving...';
+            
+            const result = await apiCall('saveTheme', {
+                userId: currentUser.userId,
+                theme: selectedTheme
+            });
+            
+            if (result.success) {
+                currentUser.theme = selectedTheme;
+                localStorage.setItem('vaSchedulerUser', JSON.stringify(currentUser));
+                redirectToDashboard();
+            } else {
+                showToast('Failed to save theme. Please try again.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Continue to Dashboard';
+            }
+        }
+
+        // ===== REDIRECT TO DASHBOARD =====
+        function redirectToDashboard() {
+            showScreen('screenLoading');
+            document.getElementById('loadingMessage').textContent = 'Loading your dashboard...';
+            
+            localStorage.setItem('schedulerTasks', JSON.stringify(currentUser.data?.tasks || []));
+            localStorage.setItem('schedulerClients', JSON.stringify(currentUser.data?.clients || []));
+            localStorage.setItem('schedulerReminders', JSON.stringify(currentUser.data?.reminders || []));
+            localStorage.setItem('schedulerTimesheet', JSON.stringify(currentUser.data?.timesheetEntries || []));
+            localStorage.setItem('schedulerProfile', JSON.stringify(currentUser.data?.profile || {
+                name: currentUser.fullName,
+                email: '',
+                avatar: '👤',
+                mode: 'personal'
+            }));
+            
+            if (currentUser.theme) {
+                localStorage.setItem('schedulerTheme', currentUser.theme);
+            }
+            
+            localStorage.setItem('schedulerHasVisited', 'true');
+            localStorage.setItem('verified', 'true');
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        // ===== LOGOUT FUNCTION =====
+        function logout() {
+            localStorage.removeItem('vaSchedulerUser');
+            localStorage.removeItem('schedulerTasks');
+            localStorage.removeItem('schedulerClients');
+            localStorage.removeItem('schedulerReminders');
+            localStorage.removeItem('schedulerTimesheet');
+            localStorage.removeItem('schedulerProfile');
+            localStorage.removeItem('schedulerTheme');
+            localStorage.removeItem('schedulerHasVisited');
+            localStorage.removeItem('verified');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

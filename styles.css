@@ -2332,3 +2332,77 @@ form {
         gap: 12px;
     }
 }
+
+/* Entry Rate Display */
+.entry-rate {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   EXPORT MODAL STYLES
+   ============================================ */
+
+.export-options {
+    padding: 24px;
+}
+
+.export-description {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-primary);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.export-option:hover {
+    border-color: var(--primary);
+    background: var(--bg-secondary);
+    transform: translateX(4px);
+}
+
+.export-option-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+}
+
+.export-option-content h4 {
+    color: var(--text-primary);
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.export-option-content p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.export-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 20px 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.export-section-title:first-of-type {
+    margin-top: 8px;
+}
