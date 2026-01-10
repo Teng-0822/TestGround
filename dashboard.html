@@ -113,7 +113,7 @@
 
             <!-- Stats Grid -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card clickable" onclick="openStatsModal('activeTasks')">
                     <div class="stat-content">
                         <div class="stat-label">Active Tasks</div>
                         <div class="stat-value" id="activeTasks">0</div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card clickable" onclick="openStatsModal('todayTasks')">
                     <div class="stat-content">
                         <div class="stat-label">Today's Tasks</div>
                         <div class="stat-value" id="todayTasks">0</div>
@@ -138,7 +138,7 @@
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card clickable" onclick="openStatsModal('pendingReminders')">
                     <div class="stat-content">
                         <div class="stat-label">Pending Reminders</div>
                         <div class="stat-value" id="pendingReminders">0</div>
@@ -151,7 +151,7 @@
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card clickable" onclick="openStatsModal('totalClients')">
                     <div class="stat-content">
                         <div class="stat-label">Total Clients</div>
                         <div class="stat-value" id="totalClients">0</div>
@@ -516,12 +516,19 @@
                             <option value="default">Default Beep</option>
                             <option value="chime">Chime</option>
                             <option value="bell">Bell</option>
+                            <option value="alert">Alert Tone</option>
                             <option value="custom">Custom (Enter URL below)</option>
                         </select>
                     </div>
                     <div class="form-group" id="customSoundGroup" style="display: none;">
                         <label>Custom Sound URL</label>
                         <input type="url" id="customSoundUrl" placeholder="https://example.com/sound.mp3">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-large test-sound-btn" onclick="testAlarmSound()">
+                            🔊 Test Sound
+                        </button>
+                        <p class="form-hint">Tap button to preview selected sound</p>
                     </div>
                     <div class="modal-actions">
                         <button class="btn btn-secondary" onclick="closeAlarmModal()">Cancel</button>
@@ -1042,6 +1049,19 @@
                         <p>Time entries as spreadsheet</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Detail Modal -->
+    <div id="statsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="statsModalTitle">Details</h3>
+                <button class="close-btn" onclick="closeStatsModal()">×</button>
+            </div>
+            <div id="statsModalBody" class="stats-modal-body">
+                <!-- Content populated by JS -->
             </div>
         </div>
     </div>

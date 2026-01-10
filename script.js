@@ -1,5 +1,5 @@
 // Configuration
-const API_URL = 'https://script.google.com/macros/s/AKfycbwaI-zUCmBq8wWtG0f9MvfGNJfzh_-7wKzbSWl8kbSdMguMxiBPAaUzWlBPCDB5XUAO/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzlgNFsR_ddTvcWGqtKdI0KaFPwe2KgToYfzKUF2aqVvNEmQmQrYU0x6XZBsPeZvDCi/exec';
 
 
 // State
@@ -485,6 +485,180 @@ function renderDashboard() {
     
     // Render upcoming week
     renderUpcomingWeek(upcomingWeek);
+}
+
+// ============================================
+// STATS MODAL FUNCTIONS
+// ============================================
+
+function openStatsModal(type) {
+    const modal = document.getElementById('statsModal');
+    const title = document.getElementById('statsModalTitle');
+    const body = document.getElementById('statsModalBody');
+    
+    const today = formatDate(new Date());
+    let content = '';
+    let modalTitle = '';
+    
+    switch (type) {
+        case 'activeTasks':
+            modalTitle = '📋 Active Tasks';
+            const activeTasks = tasks.filter(t => t.date >= today);
+            content = renderStatsTaskList(activeTasks, 'No active tasks');
+            break;
+            
+        case 'todayTasks':
+            modalTitle = "📅 Today's Tasks";
+            const todayTasks = tasks.filter(t => t.date === today);
+            content = renderStatsTaskList(todayTasks, 'No tasks scheduled for today');
+            break;
+            
+        case 'pendingReminders':
+            modalTitle = '🔔 Pending Reminders';
+            const pendingReminders = reminders.filter(r => r.date >= today && !r.completed);
+            content = renderStatsReminderList(pendingReminders, 'No pending reminders');
+            break;
+            
+        case 'totalClients':
+            modalTitle = '👥 All Clients';
+            content = renderStatsClientList(clients, 'No clients yet');
+            break;
+    }
+    
+    title.textContent = modalTitle;
+    body.innerHTML = content;
+    modal.classList.add('active');
+}
+
+function closeStatsModal() {
+    document.getElementById('statsModal').classList.remove('active');
+}
+
+function renderStatsTaskList(taskList, emptyMessage) {
+    if (taskList.length === 0) {
+        return `
+            <div class="empty-state">
+                <span class="empty-icon">📋</span>
+                <p>${emptyMessage}</p>
+            </div>
+        `;
+    }
+    
+    // Sort by date and time
+    const sorted = [...taskList].sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
+        return a.startTime.localeCompare(b.startTime);
+    });
+    
+    return `
+        <div class="stats-list">
+            ${sorted.map(task => {
+                const client = clients.find(c => c.id === task.clientId);
+                return `
+                    <div class="stats-item" onclick="editTask('${task.id}'); closeStatsModal();">
+                        <div class="stats-item-main">
+                            <div class="stats-item-title">${escapeHtml(task.title)}</div>
+                            <div class="stats-item-meta">
+                                <span>📅 ${formatDateDisplay(task.date)}</span>
+                                <span>🕐 ${formatTime(task.startTime)}</span>
+                                ${client ? `<span>👤 ${escapeHtml(client.name)}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="task-badge ${task.urgency}">${task.urgency}</span>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div class="stats-summary">
+            Total: ${taskList.length} task${taskList.length !== 1 ? 's' : ''}
+        </div>
+    `;
+}
+
+function renderStatsReminderList(reminderList, emptyMessage) {
+    if (reminderList.length === 0) {
+        return `
+            <div class="empty-state">
+                <span class="empty-icon">🔔</span>
+                <p>${emptyMessage}</p>
+            </div>
+        `;
+    }
+    
+    // Sort by date and time
+    const sorted = [...reminderList].sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
+        return a.startTime.localeCompare(b.startTime);
+    });
+    
+    return `
+        <div class="stats-list">
+            ${sorted.map(reminder => {
+                const client = clients.find(c => c.id === reminder.clientId);
+                return `
+                    <div class="stats-item" onclick="editReminder('${reminder.id}'); closeStatsModal();">
+                        <div class="stats-item-main">
+                            <div class="stats-item-title">${escapeHtml(reminder.title)}</div>
+                            <div class="stats-item-meta">
+                                <span>📅 ${formatDateDisplay(reminder.date)}</span>
+                                <span>🕐 ${formatTime(reminder.startTime)}</span>
+                                ${reminder.type ? `<span>📋 ${escapeHtml(reminder.type)}</span>` : ''}
+                                ${client ? `<span>👤 ${escapeHtml(client.name)}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="task-badge ${reminder.urgency}">${reminder.urgency}</span>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div class="stats-summary">
+            Total: ${reminderList.length} reminder${reminderList.length !== 1 ? 's' : ''}
+        </div>
+    `;
+}
+
+function renderStatsClientList(clientList, emptyMessage) {
+    if (clientList.length === 0) {
+        return `
+            <div class="empty-state">
+                <span class="empty-icon">👥</span>
+                <p>${emptyMessage}</p>
+            </div>
+        `;
+    }
+    
+    // Sort alphabetically
+    const sorted = [...clientList].sort((a, b) => a.name.localeCompare(b.name));
+    
+    return `
+        <div class="stats-list">
+            ${sorted.map(client => {
+                const clientTasks = tasks.filter(t => t.clientId === client.id);
+                const clientReminders = reminders.filter(r => r.clientId === client.id);
+                const emails = getClientEmails(client);
+                return `
+                    <div class="stats-item" onclick="editClient('${client.id}'); closeStatsModal();">
+                        <div class="stats-item-main">
+                            <div class="stats-item-title">${escapeHtml(client.name)}</div>
+                            <div class="stats-item-meta">
+                                ${emails.length > 0 ? `<span>📧 ${escapeHtml(emails[0])}</span>` : ''}
+                                ${client.phone ? `<span>📱 ${escapeHtml(client.phone)}</span>` : ''}
+                                ${client.timezone ? `<span>🕐 ${getClientLocalTime(client.timezone)}</span>` : ''}
+                            </div>
+                            <div class="stats-item-counts">
+                                <span class="count-badge">${clientTasks.length} tasks</span>
+                                <span class="count-badge">${clientReminders.length} reminders</span>
+                                ${client.hourlyRate ? `<span class="count-badge rate">$${parseFloat(client.hourlyRate).toFixed(2)}/hr</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div class="stats-summary">
+            Total: ${clientList.length} client${clientList.length !== 1 ? 's' : ''}
+        </div>
+    `;
 }
 
 function renderTodayTasks(todayTasks) {
@@ -1144,34 +1318,53 @@ let alarmSettings = {
     customUrl: ''
 };
 
+// Using more reliable sound URLs
 const soundUrls = {
-    default: 'https://www.soundjay.com/buttons/beep-07.mp3',
-    chime: 'https://www.soundjay.com/buttons/chime.mp3',
-    bell: 'https://www.soundjay.com/buttons/bell.mp3'
+    default: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3',
+    chime: 'https://cdn.pixabay.com/audio/2022/10/30/audio_e4b5a4599d.mp3',
+    bell: 'https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3',
+    alert: 'https://cdn.pixabay.com/audio/2022/03/15/audio_8cb749bf23.mp3'
 };
 
+// Audio element for previews (reusable)
+let previewAudio = null;
+
 function loadAlarmSettings() {
-    const stored = localStorage.getItem('schedulerAlarmSettings') || '{}';
-    alarmSettings = JSON.parse(stored);
-    document.getElementById('alarmSound').value = alarmSettings.sound || 'default';
-    if (alarmSettings.sound === 'custom') {
-        document.getElementById('customSoundGroup').style.display = 'block';
-        document.getElementById('customSoundUrl').value = alarmSettings.customUrl || '';
+    const stored = localStorage.getItem('schedulerAlarmSettings');
+    if (stored) {
+        alarmSettings = JSON.parse(stored);
     }
     
-    // Add change listener
-    document.getElementById('alarmSound').addEventListener('change', function() {
-        const selectedSound = this.value;
+    const alarmSoundSelect = document.getElementById('alarmSound');
+    if (alarmSoundSelect) {
+        alarmSoundSelect.value = alarmSettings.sound || 'default';
         
-        if (selectedSound === 'custom') {
+        if (alarmSettings.sound === 'custom') {
             document.getElementById('customSoundGroup').style.display = 'block';
-        } else {
-            document.getElementById('customSoundGroup').style.display = 'none';
+            document.getElementById('customSoundUrl').value = alarmSettings.customUrl || '';
         }
         
-        // Play preview of selected sound
-        playAlarmPreview(selectedSound);
-    });
+        // Add change listener - don't auto-play on change (mobile restriction)
+        alarmSoundSelect.addEventListener('change', function() {
+            const selectedSound = this.value;
+            
+            if (selectedSound === 'custom') {
+                document.getElementById('customSoundGroup').style.display = 'block';
+            } else {
+                document.getElementById('customSoundGroup').style.display = 'none';
+            }
+            
+            // Stop any currently playing preview
+            stopAlarmPreview();
+        });
+    }
+}
+
+function stopAlarmPreview() {
+    if (previewAudio) {
+        previewAudio.pause();
+        previewAudio.currentTime = 0;
+    }
 }
 
 function playAlarmPreview(soundType) {
@@ -1184,12 +1377,52 @@ function playAlarmPreview(soundType) {
         return;
     }
     
-    const audio = new Audio(soundUrl);
-    audio.volume = 0.5; // Set to 50% volume for preview
-    audio.play().catch(e => {
-        console.log('Audio play failed:', e);
-        showToast('Failed to play sound. Please check the URL.', 'error');
-    });
+    // Stop any existing preview
+    stopAlarmPreview();
+    
+    try {
+        // Create new audio element
+        previewAudio = new Audio();
+        previewAudio.volume = 0.7;
+        previewAudio.src = soundUrl;
+        
+        // Add event listeners
+        previewAudio.onloadeddata = function() {
+            console.log('Audio loaded successfully');
+        };
+        
+        previewAudio.onerror = function(e) {
+            console.log('Audio error:', e);
+            showToast('Failed to load sound. Try a different one.', 'error');
+        };
+        
+        previewAudio.onended = function() {
+            showToast('Sound preview complete', 'success');
+        };
+        
+        // Play the audio
+        const playPromise = previewAudio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    showToast('🔊 Playing sound...', 'info');
+                })
+                .catch(e => {
+                    console.log('Audio play failed:', e);
+                    // Try alternative approach for mobile
+                    showToast('Tap the Test Sound button again', 'warning');
+                });
+        }
+    } catch (e) {
+        console.log('Audio error:', e);
+        showToast('Failed to play sound', 'error');
+    }
+}
+
+function testAlarmSound() {
+    const soundType = document.getElementById('alarmSound').value;
+    playAlarmPreview(soundType);
 }
 
 function saveAlarmSettings() {
@@ -2900,6 +3133,7 @@ function exportAllCalendarICS() {
 document.addEventListener('click', (e) => {
     if (e.target.id === 'timesheetEditModal') closeTimesheetEditModal();
     if (e.target.id === 'exportDataModal') closeExportDataModal();
+    if (e.target.id === 'statsModal') closeStatsModal();
 });
 
 // Initialize on page load

@@ -2406,3 +2406,116 @@ form {
 .export-section-title:first-of-type {
     margin-top: 8px;
 }
+
+/* Clickable Stat Cards */
+.stat-card.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stat-card.clickable:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-card.clickable:active {
+    transform: translateY(-2px);
+}
+
+/* Stats Modal */
+.modal-large {
+    max-width: 700px;
+}
+
+.stats-modal-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stats-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-primary);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.stats-item:hover {
+    border-color: var(--primary);
+    transform: translateX(4px);
+}
+
+.stats-item-main {
+    flex: 1;
+}
+
+.stats-item-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.stats-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.stats-item-counts {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.count-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    color: var(--text-secondary);
+}
+
+.count-badge.rate {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.stats-summary {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Form hint */
+.form-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+/* Test Sound Button */
+.test-sound-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
