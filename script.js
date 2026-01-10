@@ -1318,12 +1318,16 @@ let alarmSettings = {
     customUrl: ''
 };
 
-// Using more reliable sound URLs
+// Using reliable sound URLs from free sound libraries
 const soundUrls = {
-    default: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3',
-    chime: 'https://cdn.pixabay.com/audio/2022/10/30/audio_e4b5a4599d.mp3',
+    default: 'https://cdn.freesound.org/previews/536/536420_4921277-lq.mp3',
+    chime: 'https://cdn.freesound.org/previews/411/411089_5121236-lq.mp3',
     bell: 'https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3',
-    alert: 'https://cdn.pixabay.com/audio/2022/03/15/audio_8cb749bf23.mp3'
+    alert: 'https://cdn.freesound.org/previews/352/352661_5121236-lq.mp3',
+    ding: 'https://cdn.freesound.org/previews/256/256113_3263906-lq.mp3',
+    notification: 'https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3',
+    gentle: 'https://cdn.freesound.org/previews/221/221359_2130724-lq.mp3',
+    alarm: 'https://cdn.freesound.org/previews/250/250629_4486188-lq.mp3'
 };
 
 // Audio element for previews (reusable)
